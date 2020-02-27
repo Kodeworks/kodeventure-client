@@ -6,7 +6,7 @@
  * @param {*} response The express.js response object
  */
 function mySimpleQuest(request, response) {
-  const reply = JSON.stringify({'message': 'Functional Hello World!'})
+  const reply = JSON.stringify({'answer': 'Functional Hello World!'})
 
   response.send(reply)
 }
@@ -35,7 +35,7 @@ class MyQuest {
    * @param {*} response Express.js response object
    */
   handleRequest(request, response) {
-    const reply = JSON.stringify({'message': 'Classy Hello World!'})
+    const reply = JSON.stringify({'answer': 'Classy Hello World!'})
 
     response.send(reply)
   }
