@@ -24,7 +24,7 @@ class Player {
    */
   loadQuests() {
     // Simple version, where we just attach a quest handler that will respond to HTTP GET
-    this.express.get('my-simple-quest', example.mySimpleQuest)
+    this.express.get('/my-simple-quest', example.mySimpleQuest)
 
     // Class based version, where the quest handler has the full power of the Player object to use
     // when solving the quest.
