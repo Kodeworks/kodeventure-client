@@ -59,3 +59,4 @@ class Player {
 const player = new Player()
 
 player.connect()
+player.config()
