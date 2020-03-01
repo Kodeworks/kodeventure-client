@@ -1,6 +1,11 @@
 # Editors
 .vscode/
 
+# Certificate files
+player.crt
+player.key
+player.pub
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
