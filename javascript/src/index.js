@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser')
+const chalk = require('chalk')
 const express = require('express')
 
 const config = require('./config.js')
@@ -17,6 +18,7 @@ class Player {
   constructor() {
     this.express = express()
     this.headers = {'Authorization': config.PLAYER_TOKEN }
+    this.config()
   }
 
   /**
@@ -29,17 +31,6 @@ class Player {
     // Class based version, where the quest handler has the full power of the Player object to use
     // when solving the quest.
     this.myQuest = new example.MyQuest(this)
-
-    // This will capture all other requests and print to console before sending an empty reply
-    this.express.use('*', (req, res, next) => {
-      const data = req.body
-      const route = req.baseUrl
-      const method = req.method
-
-      console.log(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`)
-
-      res.json({})
-    })
   }
 
   /**
@@ -64,10 +55,20 @@ class Player {
     this.express.use(bodyParser.urlencoded({ extended: false }))
 
     this.loadQuests()
+
+    // This will capture all other requests and print to console before sending an empty reply
+    this.express.use('*', (req, res, next) => {
+      const data = req.body
+      const route = req.baseUrl
+      const method = req.method
+
+      console.error(chalk.yellow(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`))
+
+      res.json({})
+    })
   }
 }
 
 const player = new Player()
 
 player.connect()
-player.config()

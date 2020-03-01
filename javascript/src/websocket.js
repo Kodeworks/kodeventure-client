@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const WebSocket = require('ws')
 
 const config = require('./config.js')
@@ -38,12 +39,19 @@ class WebSocketHandler {
     const eventType = payload['type']
     const data = payload['data']
 
-    // TODO: Push type and data into an event parser
-    // TOOD: Make constants for each event type
-    if (eventType === "game_message") {
-      console.log(`[SERVER] ${data['msg']}`)
-    } else {
-      console.log(`[SERVER] (${eventType}) ${JSON.stringify(data)}`)
+    switch (eventType) {
+      case "game_started":
+      case "game_message":
+      case "game_paused":
+      case "game_unpaused":
+      case "game_ended":
+        console.log(chalk.blueBright(`[SERVER] (${eventType}) ${data['msg']}`))
+        break
+      case "player_error":
+        console.error(chalk.red(`[SERVER] (${eventType}) ${data['error']}`))
+        break
+      default:
+        console.log(chalk.blueBright(`[SERVER] (${eventType}) ${JSON.stringify(data)}`))
     }
   }
 
