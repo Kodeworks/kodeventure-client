@@ -3,7 +3,7 @@ const WebSocket = require('ws')
 
 const config = require('./config.js')
 
-const WS_URI = `ws://${config.SERVER_HOST}/ws`
+const WS_URI = `wss://${config.SERVER_HOST}/ws`
 
 /**
  * A WebSocket handler that parses messages from the server and spits them out accordingly
@@ -15,7 +15,7 @@ class WebSocketHandler {
    */
   constructor(player) {
     this.player = player
-    this.ws = new WebSocket(WS_URI, { headers: player.headers })
+    this.ws = new WebSocket(WS_URI, { headers: player.headers, rejectUnauthorized: false })
 
     this.ws.on('open', this.handleOpen.bind(this))
     this.ws.on('message', this.handleMessage.bind(this))
