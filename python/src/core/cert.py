@@ -9,13 +9,13 @@ __all__ = ['create_certificate', 'init_certificate']
 CERT_ENDPOINT: str = f'https://{SERVER_HOST}/cert'
 
 
-def parent_dir(filename):
+def root_dir(filename):
     """
     Fetch the filename from the parent directory of this file.
     :param filename: The filename to fetch
     """
 
-    return path.join(path.dirname(__file__), '..', filename)
+    return path.join(path.dirname(__file__), '..', '..', filename)
 
 
 def create_certificate():
@@ -32,11 +32,11 @@ def create_certificate():
         public_key = data['public']
         certificate = data['cert']
 
-        with open(parent_dir('player.key'), 'w', encoding='utf-8') as f:
+        with open(root_dir('player.key'), 'w', encoding='utf-8') as f:
             f.write(private_key)
-        with open(parent_dir('player.pub'), 'w', encoding='utf-8') as f:
+        with open(root_dir('player.pub'), 'w', encoding='utf-8') as f:
             f.write(public_key)
-        with open(parent_dir('player.crt'), 'w', encoding='utf-8') as f:
+        with open(root_dir('player.crt'), 'w', encoding='utf-8') as f:
             f.write(certificate)
 
 
@@ -46,8 +46,8 @@ def init_certificate():
     a new certificate will be fetched from the server before starting.
     """
 
-    key = parent_dir('player.key')
-    cert = parent_dir('player.crt')
+    key = root_dir('player.key')
+    cert = root_dir('player.crt')
 
     if not (path.exists(key) and path.exists(cert)):
         import urllib3
