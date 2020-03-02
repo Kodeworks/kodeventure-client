@@ -58,7 +58,7 @@ class Log:
     @staticmethod
     def error(msg: str):
         """
-        Print an error mesage to stderr in red
+        Print an error mesage to stderr in red color.
         :param msg: The message
         """
 

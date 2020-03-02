@@ -4,7 +4,7 @@
   "description": "Client (Player) for Kodeventure programming RPG",
   "main": "./src/start.js",
   "scripts": {
-    "start": "./node_modules/nodemon/bin/nodemon.js --no-warnings --no-deprecation ./src/start.js"
+    "start": "./node_modules/nodemon/bin/nodemon.js --unhandled-rejections=strict --no-warnings ./src/start.js"
   },
   "keywords": [],
   "author": "Kodeworks",

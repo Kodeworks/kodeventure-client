@@ -6,6 +6,7 @@ const https = require('https')
 const path = require('path')
 
 const config = require('../config.js')
+const log = require('../log')
 const middleware = require('./middleware.js')
 const websocket = require('./websocket.js')
 
@@ -56,7 +57,7 @@ class PlayerModel {
       const route = req.baseUrl
       const method = req.method
 
-      console.error(chalk.yellow(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`))
+      log.error(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`)
 
       res.json({})
     })

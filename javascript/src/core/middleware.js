@@ -1,4 +1,5 @@
 const config = require('../config.js')
+const log = require('../log')
 
 /**
  * Express middleware that will ensure that we are talking to the real game server and not someone trying
@@ -10,7 +11,7 @@ const config = require('../config.js')
  */
 const serverAuthMiddleware = (request, response, next) => {
   if (request.headers.authorization !== config.SERVER_TOKEN) {
-    console.error(`Received a request from ${request.connection.remoteAddress} with an incorrect server token!`)
+    log.error(`Received a request from ${request.connection.remoteAddress} with an incorrect server token!`)
 
     response.status(401)
     response.send('Unauthorized')

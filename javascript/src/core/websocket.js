@@ -2,6 +2,7 @@ const chalk = require('chalk')
 const WebSocket = require('ws')
 
 const config = require('../config.js')
+const log = require('../log')
 
 const WS_URI = `wss://${config.SERVER_HOST}/ws`
 
@@ -27,7 +28,7 @@ class WebSocketHandler {
    * WebSocket handler for open events
    */
   handleOpen() {
-    console.log(`Connected to ${WS_URI}`)
+    log.info(`[WS] Connected to ${WS_URI}`)
   }
 
   /**
@@ -45,13 +46,13 @@ class WebSocketHandler {
       case "game_paused":
       case "game_unpaused":
       case "game_ended":
-        console.log(chalk.blueBright(`[SERVER] (${eventType}) ${data['msg']}`))
+        log.server(eventType, data['msg'])
         break
       case "player_error":
-        console.error(chalk.red(`[SERVER] (${eventType}) ${data['error']}`))
+        log.error(`[SERVER] (${eventType}) ${data['error']}`)
         break
       default:
-        console.log(chalk.blueBright(`[SERVER] (${eventType}) ${JSON.stringify(data)}`))
+        log.server(eventType, JSON.stringify(data))
     }
   }
 
@@ -61,14 +62,14 @@ class WebSocketHandler {
    * @param {String} reason The reason if given
    */
   handleError(code, reason) {
-    console.error(`[ERROR] ${code} ${reason}`)
+    log.error(`[WS] ${code} ${reason}`)
   }
 
   /**
    * WebSocket event handler for close events
    */
   handleClose() {
-    console.warn(`[WS] WebSocket connection closed`)
+    log.info(`[WS] WebSocket connection closed`)
   }
 }
 

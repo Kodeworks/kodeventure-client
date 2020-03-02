@@ -1,3 +1,6 @@
+const log = require('../log')
+
+
 /**
  * Example, simple function based quest handler that only needs to reply a response and must be added
  * to the web server manually in the Player class.
@@ -6,9 +9,22 @@
  * @param {*} response The express.js response object
  */
 function exampleQuestHandler(request, response) {
-  const reply = JSON.stringify({'answer': 'bjarne stroustrup'})
+  if (request.method === 'POST') {
+    // We will always get JSON from the server
+    data = request.body
 
-  response.send(reply)
+    // Let's see what the server is asking
+    log.info(`Server sent POST to /my-simple-quest: ${JSON.stringify(data)}`)
+
+    // Ok so we know that the question is "Who invented C++?"
+    // The request always contains a "msg" field, and the response always contains an "answer" field
+    const reply = {'answer': 'bjarne stroustrup'}
+
+    // The web server always expects a JSON response
+    response.send(JSON.stringify(reply))
+  } else {
+    log.error('This quest is supposed to handle POST requests')
+  }
 }
 
 
