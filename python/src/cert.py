@@ -10,10 +10,19 @@ CERT_ENDPOINT: str = f'https://{SERVER_HOST}/cert'
 
 
 def parent_dir(filename):
+    """
+    Fetch the filename from the parent directory of this file.
+    :param filename: The filename to fetch
+    """
+
     return path.join(path.dirname(__file__), '..', filename)
 
 
 def create_certificate():
+    """
+    Create a certificate by requesting a new one from the server and writing to the root directory.
+    """
+
     response = requests.post(CERT_ENDPOINT, verify=False)
 
     if response.status_code == 200:
@@ -32,6 +41,11 @@ def create_certificate():
 
 
 def init_certificate():
+    """
+    Initialize the player certificate by checking if it exists. If it does not,
+    a new certificate will be fetched from the server before starting.
+    """
+
     key = parent_dir('player.key')
     cert = parent_dir('player.crt')
 

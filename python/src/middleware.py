@@ -4,6 +4,13 @@ from colorama import Fore
 
 @web.middleware
 async def unhandled_route(request: web.Request, handler: web.RequestHandler) -> web.Response:
+    """
+    Middleware responsible for checking if the route requested exists, and prints to console
+    if it does not.
+    :param request: aiohttp request object
+    :param handler: aiohttp request handler
+    """
+
     method = request.method
     route = request.path
 
