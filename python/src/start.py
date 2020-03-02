@@ -1,6 +1,6 @@
 from os import path
 
-from cert import init_certificate
+from core.cert import init_certificate
 from log import Log
 from player import Player
 
