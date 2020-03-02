@@ -33,6 +33,7 @@ class WebSocketHandler:
         """
 
         self.player = player
+        self.quest_handlers = []
         self.socket = None
 
     async def connect(self, *args):
@@ -65,11 +66,25 @@ class WebSocketHandler:
                     self.handle_error(msg)
                     break
                 elif msg.type == WSMsgType.TEXT:
-                    self.handle_message(msg.data)
+                    await self.handle_message(msg.data)
                 elif msg.type == WSMsgType.CLOSING:
                     self.handle_closing(msg)
         finally:
             Log.info(f'[WS] Connection to server was closed')
+
+    async def send(self, data):
+        """
+        Send some JSON data over the socket.
+        :param data: A Python dictionary with the data to send.
+        """
+
+        if not isinstance(data, dict):
+            Log.error(f'Could not send {data} to server, as it is not a dictionary')
+
+        if self.socket is not None:
+            await self.socket.send_json(data)
+        else:
+            Log.error(f'Could not send {data} to server, as there is no active websocket')
 
     async def close(self):
         """
@@ -79,7 +94,7 @@ class WebSocketHandler:
         if self.socket is not None:
             await self.socket.close()
 
-    def handle_message(self, msg: str):
+    async def handle_message(self, msg: str):
         """
         Event handler for regular text messages received from the server.
         :param msg: The message body as text
@@ -89,10 +104,17 @@ class WebSocketHandler:
         event_type = payload['type']
         data = payload['data']
 
+        # Handle regular game messages
         if event_type in GAME_MESSAGES:
             Log.server(event_type, data["msg"])
+        # Handle a quest request
+        elif event_type == 'player_quest_request':
+            for handler in self.quest_handlers:
+                await handler(data, self.player)
+        # Handle game errors related to this player
         elif event_type == 'player_error':
             Log.error(f'[SERVER] (player_error) {data}')
+        # Handle all other messages
         else:
             Log.error(f'[SERVER] ({event_type}) {data}')
 

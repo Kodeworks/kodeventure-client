@@ -7,9 +7,9 @@ from colorama import Fore
 from aiohttp import web, ClientSession
 
 from config import PLAYER_HOST, PLAYER_PORT, PLAYER_TOKEN, SERVER_HOST
+from core.middleware import unhandled_route
+from core.websocket import WebSocketHandler
 from log import Log
-from middleware import unhandled_route
-from websocket import WebSocketHandler
 
 
 class PlayerModel(ABC):
