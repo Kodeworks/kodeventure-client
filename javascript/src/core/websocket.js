@@ -1,4 +1,3 @@
-const chalk = require('chalk')
 const WebSocket = require('ws')
 
 const config = require('../config.js')
@@ -16,7 +15,14 @@ class WebSocketHandler {
    */
   constructor(player) {
     this.player = player
-    this.ws = new WebSocket(WS_URI, { headers: player.headers, rejectUnauthorized: false })
+    this.questHandlers = []
+  }
+
+  /**
+   * Connect to the game server to register player and receive notifications
+   */
+  connect() {
+    this.ws = new WebSocket(WS_URI, { headers: this.player.headers, rejectUnauthorized: false })
 
     this.ws.on('open', this.handleOpen.bind(this))
     this.ws.on('message', this.handleMessage.bind(this))
@@ -48,11 +54,23 @@ class WebSocketHandler {
       case "game_ended":
         log.server(eventType, data['msg'])
         break
+      case "player_quest_request":
+        this.handleQuestRequest(data)
       case "player_error":
         log.error(`[SERVER] (${eventType}) ${data['error']}`)
         break
       default:
         log.server(eventType, JSON.stringify(data))
+    }
+  }
+
+  /**
+   * WebSocket handler for player_quest_request event type
+   * @param {*} data The data that came along with the message
+   */
+  handleQuestRequest(data) {
+    for (const handler of this.questHandlers) {
+      handler(data, this.player)
     }
   }
 

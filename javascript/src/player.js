@@ -24,7 +24,7 @@ class Player extends model.PlayerModel {
     // this.exampleQuest = new example.ExampleQuestHandler(this)
 
     // Add a quest handler for a quest request over websocket
-    // this.ws.questHandlers.push(example.exampleWsQuestHandler)
+    this.ws.questHandlers.push(example.exampleWsQuestHandler)
   }
 }
 

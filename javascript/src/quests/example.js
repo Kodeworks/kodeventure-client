@@ -72,7 +72,29 @@ class ExampleQuestHandler {
   }
 }
 
+
+/**
+ * Example quest handler that handles a quest request from the websocket
+ * @param {*} data The JSON data received
+ */
+function exampleWsQuestHandler(data, player) {
+
+  // Let's see what the server is asking
+  console.log('Server sent over websocket:', data)
+
+  // Ok, so we know the server is needy, and expects a response within 2 seconds, better hurry!
+  // The request data always contains a "msg" field, and the response always must have a "type" and "data" field,
+  // where "data" is whatever the server demands.
+  response = { 'msg': 'Calm your processor! Here, have some bits'}
+
+  payload = { 'type': 'player_quest_response', 'data': response }
+
+  player.ws.send(JSON.stringify(payload))
+}
+
+
 module.exports = {
   exampleQuestHandler: exampleQuestHandler,
-  ExampleQuestHandler: ExampleQuestHandler
+  ExampleQuestHandler: ExampleQuestHandler,
+  exampleWsQuestHandler: exampleWsQuestHandler
 }

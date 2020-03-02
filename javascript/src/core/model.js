@@ -24,6 +24,7 @@ class PlayerModel {
 
     const cert = this.loadSslCertificate()
     this.httpServer = https.createServer(cert, this.express)
+    this.ws = new websocket.WebSocketHandler(this)
 
     this.config()
   }
@@ -34,9 +35,8 @@ class PlayerModel {
   connect() {
     // Start the player web server
     this.httpServer.listen(config.PLAYER_PORT, config.PLAYER_HOST)
-
     // Connect to the game server to register player and receive notifications
-    this.ws = new websocket.WebSocketHandler(this)
+    this.ws.connect()
   }
 
   /**
