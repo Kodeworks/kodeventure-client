@@ -33,7 +33,7 @@ class PlayerModel(ABC):
         )
         self.client = ClientSession()
         self.ws = WebSocketHandler(self)
-        self.cert = self._load_ssl_certificates()
+        self.cert = self._load_ssl_certificate()
 
         self.config()
 
@@ -90,15 +90,15 @@ class PlayerModel(ABC):
         # Load user defined quests
         self.load_quests()
 
-    def _load_ssl_certificates(self) -> ssl.SSLContext:
+    def _load_ssl_certificate(self) -> ssl.SSLContext:
         """
-        Private helper to load SSL certificates from disk
+        Private helper to load SSL certificate from disk
         """
 
         sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
         sslcontext.load_cert_chain(
-            path.join(path.dirname(__file__), '..', 'player.crt'),
-            path.join(path.dirname(__file__), '..', 'player.key')
+            path.join(path.dirname(__file__), '..', '..', 'player.crt'),
+            path.join(path.dirname(__file__), '..', '..', 'player.key')
         )
 
         return sslcontext
