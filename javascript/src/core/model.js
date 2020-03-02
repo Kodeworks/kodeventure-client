@@ -57,7 +57,7 @@ class PlayerModel {
       const route = req.baseUrl
       const method = req.method
 
-      log.error(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`)
+      log.warning(`Unhandled ${method} request to ${route}: ${JSON.stringify(data)}`)
 
       res.json({})
     })
