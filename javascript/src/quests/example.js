@@ -11,7 +11,7 @@ const log = require('../log')
 function exampleQuestHandler(request, response) {
   if (request.method === 'POST') {
     // We will always get JSON from the server
-    data = request.body
+    const data = request.body
 
     // Let's see what the server is asking
     log.info(`Server sent POST to /my-simple-quest: ${JSON.stringify(data)}`)
@@ -29,7 +29,9 @@ function exampleQuestHandler(request, response) {
 
 
 /**
- * Example, class based quest handler that will self-register when constructed
+ * Example, class based quest handler that will self-register when constructed.
+ * This example accepts the Player object as a constructor argument, so we can access
+ * all relevant properties of the Player.
  */
 class ExampleQuestHandler {
   /**
@@ -41,7 +43,7 @@ class ExampleQuestHandler {
     this.player = player
 
     // Set up the player so that this quest answers for requests to /my-quest
-    this.player.express.get('/my-simple-quest', this.handleRequest.bind(this))
+    this.player.express.post('/my-simple-quest', this.handleRequest.bind(this))
   }
 
   /**
@@ -51,9 +53,22 @@ class ExampleQuestHandler {
    * @param {*} response Express.js response object
    */
   handleRequest(request, response) {
-    const reply = JSON.stringify({'answer': 'bjarne stroustrup'})
+    if (request.method === 'POST') {
+      // We will always get JSON from the server
+      const data = request.body
+  
+      // Let's see what the server is asking
+      log.info(`Server sent POST to /my-simple-quest: ${JSON.stringify(data)}`)
 
-    response.send(reply)
+      // Ok so we know that the question is "Who invented C++?"
+      // The request always contains a "msg" field, and the response always contains an "answer" field
+      const reply = {'answer': 'bjarne stroustrup'}
+
+      // The web server always expects a JSON response
+      response.send(JSON.stringify(reply))
+    } else {
+      log.error('This quest is supposed to handle POST requests')
+    }
   }
 }
 

@@ -13,6 +13,4 @@ log.logLevel = log.DEBUG
 cert.initCertificate().then(() => {
     const p = new player.Player()
     p.connect()
-}).catch(e => {
-    log.error(e)
 })

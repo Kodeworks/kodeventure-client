@@ -21,7 +21,7 @@ class Player extends model.PlayerModel {
     this.express.post('/my-simple-quest', example.exampleQuestHandler)
 
     // Uncomment to use a class based quest handler instead of the above
-    // self.exampleQuest = new example.ExampleQuestHandler(this)
+    // this.exampleQuest = new example.ExampleQuestHandler(this)
 
     // Add a quest handler for a quest request over websocket
     // this.ws.questHandlers.push(example.exampleWsQuestHandler)
