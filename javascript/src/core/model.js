@@ -1,9 +1,11 @@
 const bodyParser = require('body-parser')
 const chalk = require('chalk')
 const express = require('express')
+const fs = require('fs')
+const https = require('https')
+const path = require('path')
 
-const config = require('./config.js')
-const example = require('./quests/example.js')
+const config = require('../config.js')
 const middleware = require('./middleware.js')
 const websocket = require('./websocket.js')
 
@@ -11,26 +13,18 @@ const websocket = require('./websocket.js')
  * Kodeventure Player class hosting a web server and maintaining an active
  * websocket connection to the Kodeventure game server.
  */
-class Player {
+class PlayerModel {
   /**
    * Construct a Player object
    */
   constructor() {
     this.express = express()
     this.headers = {'Authorization': config.PLAYER_TOKEN }
+
+    const cert = this.loadSslCertificate()
+    this.httpServer = https.createServer(cert, this.express)
+
     this.config()
-  }
-
-  /**
-   * Configure the web server to use your quest handlers
-   */
-  loadQuests() {
-    // Simple version, where we just attach a quest handler that will respond to HTTP GET
-    this.express.get('/my-simple-quest', example.mySimpleQuest)
-
-    // Class based version, where the quest handler has the full power of the Player object to use
-    // when solving the quest.
-    this.myQuest = new example.MyQuest(this)
   }
 
   /**
@@ -38,7 +32,7 @@ class Player {
    */
   connect() {
     // Start the player web server
-    this.express.listen(config.PLAYER_PORT, config.PLAYER_HOST)
+    this.httpServer.listen(config.PLAYER_PORT, config.PLAYER_HOST)
 
     // Connect to the game server to register player and receive notifications
     this.ws = new websocket.WebSocketHandler(this)
@@ -67,8 +61,22 @@ class Player {
       res.json({})
     })
   }
+
+  /**
+   * Helper to load SSL certificate from disk
+   */
+  loadSslCertificate() {
+    const privateKeyPath = path.resolve(__dirname, '..', '..', 'player.key')
+    const certificatePath = path.resolve(__dirname, '..', '..', 'player.crt')
+
+    const privateKey  = fs.readFileSync(privateKeyPath, 'utf8');
+    const certificate = fs.readFileSync(certificatePath, 'utf8');
+
+    return { key: privateKey, cert: certificate }
+  }
 }
 
-const player = new Player()
 
-player.connect()
+module.exports = {
+  PlayerModel: PlayerModel
+}

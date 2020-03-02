@@ -1,4 +1,4 @@
-const config = require('./config.js')
+const config = require('../config.js')
 
 /**
  * Express middleware that will ensure that we are talking to the real game server and not someone trying

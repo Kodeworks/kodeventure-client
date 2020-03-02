@@ -1,3 +1,8 @@
+# Certificate files
+player.crt
+player.key
+player.pub
+
 # Logs
 logs
 *.log

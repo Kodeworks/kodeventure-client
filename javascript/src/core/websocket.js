@@ -1,7 +1,7 @@
 const chalk = require('chalk')
 const WebSocket = require('ws')
 
-const config = require('./config.js')
+const config = require('../config.js')
 
 const WS_URI = `wss://${config.SERVER_HOST}/ws`
 

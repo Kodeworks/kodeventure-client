@@ -5,8 +5,8 @@
  * @param {*} request The express.js request object
  * @param {*} response The express.js response object
  */
-function mySimpleQuest(request, response) {
-  const reply = JSON.stringify({'answer': 'Functional Hello World!'})
+function exampleQuestHandler(request, response) {
+  const reply = JSON.stringify({'answer': 'bjarne stroustrup'})
 
   response.send(reply)
 }
@@ -15,7 +15,7 @@ function mySimpleQuest(request, response) {
 /**
  * Example, class based quest handler that will self-register when constructed
  */
-class MyQuest {
+class ExampleQuestHandler {
   /**
    * Construct a MyQuest quest handler
    *
@@ -25,7 +25,7 @@ class MyQuest {
     this.player = player
 
     // Set up the player so that this quest answers for requests to /my-quest
-    this.player.express.get('/my-quest', this.handleRequest)
+    this.player.express.get('/my-simple-quest', this.handleRequest.bind(this))
   }
 
   /**
@@ -35,17 +35,13 @@ class MyQuest {
    * @param {*} response Express.js response object
    */
   handleRequest(request, response) {
-    const reply = JSON.stringify({'answer': 'Classy Hello World!'})
+    const reply = JSON.stringify({'answer': 'bjarne stroustrup'})
 
     response.send(reply)
-  }
-
-  toString() {
-    return `MyQuest (${this.method} ${this.route})`
   }
 }
 
 module.exports = {
-  mySimpleQuest: mySimpleQuest,
-  MyQuest: MyQuest
+  exampleQuestHandler: exampleQuestHandler,
+  ExampleQuestHandler: ExampleQuestHandler
 }
