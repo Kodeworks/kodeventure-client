@@ -24,23 +24,36 @@ class WebSocketHandler:
         self.socket = None
 
     async def connect(self, *args):
-        self.socket = await self.player.client.ws_connect(
-            WS_URI,
-            headers=self.player.headers,
-            ssl=False
-        )
+        try:
+            self.socket = await self.player.client.ws_connect(
+                WS_URI,
+                headers=self.player.headers,
+                ssl=False
+            )
 
-        async for msg in self.socket:
-            if msg.type == WSMsgType.ERROR:
-                self.handle_error
-                break
-            elif msg.type == WSMsgType.TEXT:
-                self.handle_message(msg.data)
+            print(f'Connected to {WS_URI}')
+            self.player.aiohttp.loop.create_task(self.run())
+        except Exception as e:
+            print(f'{Fore.RED}[WS] Failed to connect to ${WS_URI}: {e}')
 
-        return self.socket
 
-    async def close(self, *args):
-        await self.socket.close()
+
+    async def run(self):
+        try:
+            async for msg in self.socket:
+                if msg.type == WSMsgType.ERROR:
+                    self.handle_error(msg)
+                    break
+                elif msg.type == WSMsgType.TEXT:
+                    self.handle_message(msg.data)
+                elif msg.type == WSMsgType.CLOSING:
+                    self.handle_closing(msg)
+        finally:
+            print(f'[WS] Connection to server was closed')
+
+    async def close(self):
+        if self.socket is not None:
+            await self.socket.close()
 
     def handle_message(self, msg):
         payload = json.loads(msg)
@@ -56,3 +69,6 @@ class WebSocketHandler:
 
     def handle_error(self, msg):
         print(f'{Fore.RED}[WS] Error: {msg}')
+
+    def handle_closing(self, msg):
+        print(f'[WS] Connection to server is closing: {msg}')

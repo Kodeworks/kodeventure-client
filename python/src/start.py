@@ -12,4 +12,8 @@ if __name__ == '__main__':
     init_certificate()
 
     player = Player()
-    player.connect()
+
+    try:
+        player.connect()
+    except Exception as e:
+        print(f'{colorama.Fore.RED}Error: {e}')
