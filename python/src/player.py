@@ -20,4 +20,6 @@ class Player(PlayerModel):
         Register all your quest handlers here
         """
 
+        self.add_quest('POST', '/my-simple-quest', example_quest)
+
         Log.info('Quests loaded')
